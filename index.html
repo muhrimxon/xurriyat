@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>«Хуррият» архиви</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --qogoz:#e7dfc9;
+    --sahifa:#fbf8f0;
+    --siyoh:#1f1b16;
+    --sust:#6b6354;
+    --chiziq:#c6baa0;
+    --kok:#0a63a8;
+    --kok-och:#e2edf6;
+    --olcha:#8a3324;
+    --matn:"PT Serif",Georgia,"Times New Roman",serif;
+    --ui:"PT Sans","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--qogoz);color:var(--siyoh);font-family:var(--ui);font-size:17px;line-height:1.5}
+  a{color:var(--kok)}
+  button{font:inherit;color:inherit}
+
+  .panel{
+    position:sticky;top:0;z-index:40;display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;
+    padding:.7rem clamp(1rem,4vw,2.5rem);background:var(--qogoz);border-bottom:1px solid var(--chiziq);
+  }
+  .panel .nomi{font-family:var(--matn);font-weight:700;font-size:1.05rem}
+  .panel .nomi span{color:var(--kok)}
+  .panel .osma{margin-left:auto;display:flex;gap:.4rem;align-items:center}
+  .alifbo{display:flex;border:1px solid var(--chiziq);background:var(--sahifa)}
+  .alifbo button{border:0;background:none;padding:.3rem .7rem;font-size:.85rem;cursor:pointer;color:var(--sust)}
+  .alifbo button[aria-pressed="true"]{background:var(--siyoh);color:var(--sahifa)}
+  .alifbo button:focus-visible{outline:2px solid var(--kok);outline-offset:-2px}
+
+  header.bosh{padding:clamp(2rem,6vw,4.5rem) clamp(1rem,4vw,2.5rem) 1.5rem;max-width:1240px;margin:0 auto}
+  .masthead{font-family:var(--matn);font-weight:700;color:var(--kok);
+    font-size:clamp(3.2rem,13vw,8.5rem);line-height:.86;letter-spacing:-.02em;margin:0}
+  .tagline{font-family:var(--matn);font-style:italic;color:var(--sust);
+    margin:.6rem 0 0;font-size:clamp(1rem,2.4vw,1.35rem);max-width:34ch}
+  .shapka-meta{margin-top:1.6rem;padding-top:.8rem;border-top:2px solid var(--siyoh);
+    display:flex;gap:2rem;flex-wrap:wrap;font-size:.9rem;color:var(--sust)}
+  .shapka-meta b{display:block;color:var(--siyoh);font-size:1.05rem;font-weight:700}
+
+  .xarita-blok{max-width:1240px;margin:0 auto;padding:1rem clamp(1rem,4vw,2.5rem) 2rem;
+    display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(1rem,3vw,2.5rem);align-items:start}
+  .xarita{position:relative;line-height:0;background:var(--sahifa);box-shadow:0 1px 0 var(--chiziq)}
+  .xarita img{width:100%;height:auto;display:block}
+  .hudud{position:absolute;border:1px solid transparent;background:transparent;cursor:pointer;padding:0;
+    transition:background .12s linear,border-color .12s linear}
+  .hudud:hover,.hudud:focus-visible,.hudud.yoniq{background:rgba(10,99,168,.16);border-color:var(--kok);outline:none}
+  .xarita-izoh{position:sticky;top:5rem}
+  .xarita-izoh h2{font-family:var(--matn);font-size:1.5rem;margin:0 0 .5rem}
+  .xarita-izoh p{color:var(--sust);max-width:46ch;margin:0 0 1rem}
+  .oyna{border:1px solid var(--chiziq);background:var(--sahifa);padding:1rem;min-height:8.5rem}
+  .oyna .rub{color:var(--kok);font-size:.82rem;margin:0 0 .25rem}
+  .oyna .srl{font-family:var(--matn);font-size:1.3rem;font-weight:700;margin:0 0 .3rem;line-height:1.2}
+  .oyna .mua{font-family:var(--matn);font-style:italic;color:var(--sust);margin:0}
+  .oyna .bosh{color:var(--sust);font-size:.9rem;margin:0}
+
+  .yoq{border:1px dashed var(--chiziq);background:var(--sahifa);padding:1.5rem}
+  .yoq h3{font-family:var(--matn);font-size:1.15rem;margin:0 0 .5rem}
+  .yoq p{color:var(--sust);margin:0 0 .6rem;font-size:.95rem;max-width:52ch}
+  .yoq code{background:var(--kok-och);padding:.1rem .3rem;font-size:.9em}
+
+  .royxat-blok{max-width:1240px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem) 4rem}
+  .royxat-bosh{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;
+    border-top:2px solid var(--siyoh);padding-top:1rem;margin-bottom:1rem}
+  .royxat-bosh h2{font-family:var(--matn);font-size:1.35rem;margin:0}
+  .qidiruv{margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap}
+  .qidiruv input{font:inherit;padding:.45rem .7rem;border:1px solid var(--chiziq);
+    background:var(--sahifa);color:var(--siyoh);min-width:15rem}
+  .qidiruv input:focus{outline:2px solid var(--kok);outline-offset:-1px}
+  .filtr{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.2rem}
+  .filtr button{border:1px solid var(--chiziq);background:var(--sahifa);padding:.25rem .65rem;
+    font-size:.85rem;cursor:pointer;color:var(--sust)}
+  .filtr button[aria-pressed="true"]{background:var(--kok);border-color:var(--kok);color:#fff}
+  .filtr button:focus-visible{outline:2px solid var(--kok);outline-offset:2px}
+  .filtr .ajratgich{width:1px;background:var(--chiziq);margin:0 .4rem}
+
+  ul.materiallar{list-style:none;margin:0;padding:0;border-top:1px solid var(--chiziq)}
+  ul.materiallar li{border-bottom:1px solid var(--chiziq)}
+  ul.materiallar button{display:grid;grid-template-columns:7.5rem minmax(0,1fr) 11rem;gap:1.5rem;
+    align-items:baseline;width:100%;text-align:left;border:0;background:none;cursor:pointer;padding:.9rem .2rem}
+  ul.materiallar button:hover{background:var(--kok-och)}
+  ul.materiallar button:focus-visible{outline:2px solid var(--kok);outline-offset:-2px}
+  .rubrika{color:var(--kok);font-size:.82rem}
+  .bet-yorliq{display:block;color:var(--sust);font-size:.78rem;margin-top:.15rem}
+  .sarlavha{font-family:var(--matn);font-size:1.22rem;font-weight:700;line-height:1.25}
+  .parcha{display:block;font-family:var(--matn);font-weight:400;font-size:.95rem;color:var(--sust);
+    margin-top:.2rem;max-width:70ch}
+  .parcha.kutmoqda{font-style:italic}
+  .muallif{font-family:var(--matn);font-style:italic;color:var(--sust);font-size:.98rem}
+  .bosh-royxat{padding:2rem .2rem;color:var(--sust)}
+
+  .oqish{position:fixed;inset:0;z-index:60;background:var(--sahifa);overflow-y:auto;display:none}
+  .oqish.ochiq{display:block}
+  .oqish-panel{position:sticky;top:0;background:var(--sahifa);border-bottom:1px solid var(--chiziq);
+    display:flex;gap:1rem;align-items:center;padding:.7rem clamp(1rem,4vw,2.5rem);z-index:2}
+  .oqish-panel button.orqaga{border:1px solid var(--chiziq);background:none;padding:.35rem .8rem;
+    cursor:pointer;font-size:.9rem}
+  .oqish-panel button.orqaga:hover{background:var(--kok-och)}
+  .oqish-ichi{max-width:1180px;margin:0 auto;padding:clamp(1.5rem,4vw,3rem) clamp(1rem,4vw,2.5rem) 5rem;
+    display:grid;grid-template-columns:minmax(0,1fr) 19rem;gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+  .maqola .rub{color:var(--kok);font-size:.85rem;margin:0 0 .4rem}
+  .maqola h1{font-family:var(--matn);font-size:clamp(1.9rem,4.5vw,2.9rem);line-height:1.1;margin:0 0 .5rem}
+  .maqola .mua{font-family:var(--matn);font-style:italic;font-size:1.15rem;color:var(--sust);margin:0 0 1.6rem}
+  .maqola p.t{font-family:var(--matn);font-size:1.12rem;line-height:1.62;margin:0 0 1.1rem;max-width:66ch}
+  .kutmoqda-blok{border:1px dashed var(--chiziq);padding:1.2rem 1.4rem;max-width:66ch;background:#fff}
+  .kutmoqda-blok h2{font-family:var(--matn);font-size:1.1rem;margin:0 0 .5rem}
+  .kutmoqda-blok p{color:var(--sust);margin:0 0 .6rem}
+
+  aside.yon{position:sticky;top:4.2rem;font-size:.92rem}
+  aside.yon dl{margin:0 0 1.2rem;display:grid;grid-template-columns:auto 1fr;gap:.25rem .8rem}
+  aside.yon dt{color:var(--sust)}
+  aside.yon dd{margin:0}
+  .kesim{width:100%;aspect-ratio:3/4;border:1px solid var(--chiziq);background-repeat:no-repeat;
+    background-color:#fff;margin-bottom:.5rem}
+  .qirqim-rasm{width:100%;display:block;border:1px solid var(--chiziq);background:#fff;margin-bottom:.5rem;cursor:zoom-in}
+  .kesim-izoh{color:var(--sust);font-size:.85rem;margin:0 0 1rem}
+  .ogoh{border-left:3px solid var(--olcha);padding:.6rem .8rem;background:#fff;color:var(--sust);font-size:.88rem}
+  .kattalash{border:1px solid var(--chiziq);background:none;padding:.35rem .7rem;cursor:pointer;font-size:.88rem}
+  .kattalash:hover{background:var(--kok-och)}
+
+  footer{border-top:1px solid var(--chiziq);padding:2rem clamp(1rem,4vw,2.5rem) 3rem;
+    color:var(--sust);font-size:.88rem;max-width:1240px;margin:0 auto}
+  footer p{max-width:62ch}
+
+  @media (max-width:900px){
+    .xarita-blok{grid-template-columns:1fr}
+    .xarita-izoh{position:static}
+    .oqish-ichi{grid-template-columns:1fr}
+    aside.yon{position:static;border-top:1px solid var(--chiziq);padding-top:1.2rem}
+    ul.materiallar button{grid-template-columns:1fr;gap:.2rem}
+    .qidiruv{margin-left:0;width:100%}
+    .qidiruv input{min-width:0;width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <div class="nomi">«Хуррият» <span>архиви</span></div>
+  <div class="osma">
+    <div class="alifbo" role="group" aria-label="Matn alifbosi">
+      <button type="button" data-alifbo="kir" aria-pressed="true">Кирилл</button>
+      <button type="button" data-alifbo="lot" aria-pressed="false">Lotin</button>
+    </div>
+  </div>
+</div>
+
+<header class="bosh">
+  <h1 class="masthead">ХУРРИЯТ</h1>
+  <p class="tagline">Мустақил газета</p>
+  <div class="shapka-meta">
+    <div><b id="m-son">1-сон</b>Нишона сони</div>
+    <div><b id="m-sana">1996 йил 27 декабрь</b>чиққан сана</div>
+    <div><b id="m-soni">—</b>материал</div>
+    <div><b id="m-matn">—</b>матни киритилган</div>
+  </div>
+</header>
+
+<section class="xarita-blok" aria-labelledby="xarita-sarlavha">
+  <div class="xarita" id="xarita"></div>
+  <div class="xarita-izoh">
+    <h2 id="xarita-sarlavha">Биринчи бетнинг харитаси</h2>
+    <p>Birinchi betdagi har bir material o'z o'rnida belgilangan. Ustiga borsangiz nima ekani ko'rinadi, bossangiz ochiladi. Qolgan betlar hozircha qirqim suratlar bilan — ular ro'yxatda.</p>
+    <div class="oyna" id="oyna" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="royxat-blok">
+  <div class="royxat-bosh">
+    <h2>Материаллар рўйхати</h2>
+    <div class="qidiruv">
+      <input id="q" type="search" placeholder="Matn ichidan qidirish — kirill yoki lotin" aria-label="Qidiruv" autocomplete="off">
+    </div>
+  </div>
+  <div class="filtr" id="filtr" role="group" aria-label="Saralash"></div>
+  <ul class="materiallar" id="royxat"></ul>
+</section>
+
+<footer><p id="footer-matn"></p></footer>
+
+<div class="oqish" id="oqish" role="dialog" aria-modal="true" aria-labelledby="oq-sarlavha">
+  <div class="oqish-panel">
+    <button type="button" class="orqaga" id="orqaga">Ro'yxatga qaytish</button>
+    <div class="alifbo" role="group" aria-label="Matn alifbosi">
+      <button type="button" data-alifbo="kir" aria-pressed="true">Кирилл</button>
+      <button type="button" data-alifbo="lot" aria-pressed="false">Lotin</button>
+    </div>
+  </div>
+  <div class="oqish-ichi">
+    <article class="maqola" id="maqola"></article>
+    <aside class="yon" id="yon"></aside>
+  </div>
+</div>
+
+<script src="sonlar.js"></script>
+<script>
+/* ---------- skan fayllarining yo'li ---------- */
+const YOL_VARIANTLARI = [
+  p => p,
+  p => p.split('/').pop(),
+  p => 'skan/' + p.split('/').pop(),
+  p => 'Skan/' + p.split('/').pop(),
+  p => 'images/' + p.split('/').pop()
+];
+let YOL = YOL_VARIANTLARI[0];
+let SKAN_BOR = false;
+function skanYoli(p){ return YOL(p); }
+function yolniAniqla(){
+  const asl = SONLAR[0].betlar[0].skan;
+  return new Promise(bajar => {
+    let i = 0;
+    const sina = () => {
+      if (i >= YOL_VARIANTLARI.length){ SKAN_BOR = false; bajar(); return; }
+      const nomzod = YOL_VARIANTLARI[i];
+      const im = new Image();
+      im.onload = () => { YOL = nomzod; SKAN_BOR = true; bajar(); };
+      im.onerror = () => { i++; sina(); };
+      im.src = nomzod(asl);
+    };
+    sina();
+  });
+}
+
+/* ---------- kirill -> lotin ---------- */
+const MAP = {
+  'а':'a','б':'b','в':'v','г':'g','ғ':'gʻ','д':'d','ё':'yo','ж':'j','з':'z','и':'i','й':'y',
+  'к':'k','қ':'q','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u',
+  'ў':'oʻ','ф':'f','х':'x','ҳ':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'ʼ','ь':'',
+  'ы':'i','э':'e','ю':'yu','я':'ya'
+};
+const UNLI = 'аеёиоуэюяўы';
+function sozniOgir(soz){
+  let out = '';
+  for (let i = 0; i < soz.length; i++){
+    const ch = soz[i], past = ch.toLowerCase();
+    let r;
+    if (past === 'е'){
+      const old = i ? soz[i-1].toLowerCase() : '';
+      r = (i === 0 || UNLI.includes(old) || old === 'ъ' || old === 'ь') ? 'ye' : 'e';
+    } else if (past in MAP){ r = MAP[past]; }
+    else { out += ch; continue; }
+    if (ch !== past && r) r = r[0].toUpperCase() + r.slice(1);
+    out += r;
+  }
+  const harflar = soz.replace(/[^\u0400-\u04FF]/g,'');
+  if (harflar.length > 1 && harflar === harflar.toUpperCase()) out = out.toUpperCase();
+  return out;
+}
+function lotin(matn){ return matn ? matn.replace(/[\u0400-\u04FF]+/g, sozniOgir) : matn; }
+function yoz(matn){ return ALIFBO === 'lot' ? lotin(matn) : matn; }
+function tekis(s){ return lotin(String(s)).toLowerCase().replace(/[ʻʼ'`«»""().,!?;:—–-]/g,''); }
+
+/* ---------- holat ---------- */
+let ALIFBO = 'kir';
+let RUBRIKA = null;
+let FAQAT_MATNLI = false;
+let SOROV = '';
+const SON = SONLAR[0];
+const HAMMASI = SON.materiallar;
+const matnBor = m => !!(m.matn && m.matn.trim());
+const betYorliq = m => m.bet ? m.bet + '-bet' : 'bet aniqlanmagan';
+
+/* ---------- bet xaritasi ---------- */
+const xarita = document.getElementById('xarita');
+const oyna = document.getElementById('oyna');
+
+function xaritaniQur(){
+  xarita.innerHTML = '';
+  const bet = SON.betlar[0];
+  if (!SKAN_BOR){
+    xarita.className = 'yoq';
+    xarita.innerHTML = '<h3>Skan topilmadi</h3>' +
+      '<p>Rasm fayllari sayt bilan birga yuklanmagan. <code>skan</code> papkasi <code>index.html</code> yonida turishi kerak.</p>' +
+      '<p>Matnlar joyida — pastdagi ro\'yxat ishlayveradi.</p>';
+    return;
+  }
+  xarita.className = 'xarita';
+  const img = document.createElement('img');
+  img.src = skanYoli(bet.skan);
+  img.alt = '«Хуррият» газетасининг 1-сони, биринчи бет';
+  xarita.appendChild(img);
+  HAMMASI.filter(m => m.hudud.length).forEach(m => {
+    m.hudud.forEach(h => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'hudud';
+      b.style.cssText = `left:${h.x}%;top:${h.y}%;width:${h.w}%;height:${h.h}%`;
+      b.dataset.id = m.id;
+      b.setAttribute('aria-label', m.sarlavha);
+      b.addEventListener('mouseenter', () => oynagaYoz(m));
+      b.addEventListener('focus', () => oynagaYoz(m));
+      b.addEventListener('click', () => och(m.id));
+      xarita.appendChild(b);
+    });
+  });
+}
+function oynaBosh(){
+  const yoq = HAMMASI.filter(m => !matnBor(m)).length;
+  oyna.innerHTML = '<p class="bosh">' + HAMMASI.length + ' ta material ro\'yxatga olingan. ' +
+    yoq + ' tasining matni hali ko\'chirilmagan — ular skan surati bilan turibdi.</p>';
+}
+function oynagaYoz(m){
+  document.querySelectorAll('.hudud').forEach(h => h.classList.toggle('yoniq', h.dataset.id === m.id));
+  oyna.innerHTML = '';
+  const r = document.createElement('p'); r.className = 'rub';
+  r.textContent = yoz(m.rubrika) + ' · ' + betYorliq(m);
+  const s = document.createElement('p'); s.className = 'srl'; s.textContent = yoz(m.sarlavha);
+  oyna.append(r, s);
+  if (m.muallif){
+    const a = document.createElement('p'); a.className = 'mua'; a.textContent = yoz(m.muallif);
+    oyna.append(a);
+  }
+}
+
+/* ---------- ro'yxat ---------- */
+const royxat = document.getElementById('royxat');
+const filtr = document.getElementById('filtr');
+
+function filtrniQur(){
+  const rublar = [...new Set(HAMMASI.map(m => m.rubrika))];
+  filtr.innerHTML = '';
+  filtr.appendChild(tugma('Hammasi', () => RUBRIKA === null && !FAQAT_MATNLI,
+    () => { RUBRIKA = null; FAQAT_MATNLI = false; }));
+  filtr.appendChild(tugma('Matni bor', () => FAQAT_MATNLI,
+    () => { FAQAT_MATNLI = !FAQAT_MATNLI; }));
+  const aj = document.createElement('div'); aj.className = 'ajratgich'; filtr.appendChild(aj);
+  rublar.forEach(r => filtr.appendChild(tugma(yoz(r), () => RUBRIKA === r, () => { RUBRIKA = RUBRIKA === r ? null : r; })));
+  function tugma(nom, bosilganmi, harakat){
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = nom;
+    b.setAttribute('aria-pressed', String(bosilganmi()));
+    b.addEventListener('click', () => { harakat(); filtrniQur(); royxatniQur(); });
+    return b;
+  }
+}
+
+function royxatniQur(){
+  const q = tekis(SOROV);
+  const rolar = HAMMASI.filter(m => {
+    if (RUBRIKA && m.rubrika !== RUBRIKA) return false;
+    if (FAQAT_MATNLI && !matnBor(m)) return false;
+    if (!q) return true;
+    return tekis(m.sarlavha + ' ' + m.muallif + ' ' + m.rubrika + ' ' + m.matn + ' ' + m.izoh).includes(q);
+  });
+  royxat.innerHTML = '';
+  if (!rolar.length){
+    royxat.innerHTML = '<li><p class="bosh-royxat">Bu so\'rovga mos material yo\'q. Boshqa so\'z bilan urinib ko\'ring.</p></li>';
+    return;
+  }
+  rolar.forEach(m => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.addEventListener('click', () => och(m.id));
+    b.addEventListener('mouseenter', () => oynagaYoz(m));
+
+    const r = document.createElement('span'); r.className = 'rubrika'; r.textContent = yoz(m.rubrika);
+    const by = document.createElement('span'); by.className = 'bet-yorliq'; by.textContent = betYorliq(m);
+    r.appendChild(by);
+
+    const s = document.createElement('span'); s.className = 'sarlavha'; s.textContent = yoz(m.sarlavha);
+    const p = document.createElement('span'); p.className = 'parcha';
+    if (matnBor(m)){
+      p.textContent = yoz(m.matn.replace(/\n/g,' ').slice(0,150)) + '…';
+    } else {
+      p.className = 'parcha kutmoqda';
+      p.textContent = 'Matni hali ko\'chirilmagan — skan surati bor.';
+    }
+    s.appendChild(p);
+    const a = document.createElement('span'); a.className = 'muallif'; a.textContent = m.muallif ? yoz(m.muallif) : '';
+
+    b.append(r, s, a);
+    li.appendChild(b);
+    royxat.appendChild(li);
+  });
+}
+
+/* ---------- o'qish oynasi ---------- */
+const oqish = document.getElementById('oqish');
+const maqolaEl = document.getElementById('maqola');
+const yonEl = document.getElementById('yon');
+let JORIY = null;
+
+function och(id){
+  JORIY = HAMMASI.find(m => m.id === id);
+  maqolaniQur();
+  oqish.classList.add('ochiq');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('orqaga').focus();
+  if (location.hash !== '#' + id) history.pushState({id}, '', '#' + id);
+}
+function yop(){
+  oqish.classList.remove('ochiq');
+  document.body.style.overflow = '';
+  JORIY = null;
+  if (location.hash) history.pushState({}, '', location.pathname + location.search);
+}
+
+function maqolaniQur(){
+  const m = JORIY;
+  if (!m) return;
+  maqolaEl.innerHTML = '';
+  const r = document.createElement('p'); r.className = 'rub'; r.textContent = yoz(m.rubrika);
+  const h = document.createElement('h1'); h.id = 'oq-sarlavha'; h.textContent = yoz(m.sarlavha);
+  maqolaEl.append(r, h);
+  if (m.muallif){
+    const a = document.createElement('p'); a.className = 'mua'; a.textContent = yoz(m.muallif);
+    maqolaEl.append(a);
+  }
+
+  if (matnBor(m)){
+    m.matn.split('\n').forEach(par => {
+      if (!par.trim()) return;
+      const p = document.createElement('p'); p.className = 't'; p.textContent = yoz(par);
+      maqolaEl.appendChild(p);
+    });
+  } else {
+    const blok = document.createElement('div');
+    blok.className = 'kutmoqda-blok';
+    const bh = document.createElement('h2'); bh.textContent = 'Matn hali ko\'chirilmagan';
+    const bp = document.createElement('p');
+    bp.textContent = m.izoh || 'Bu materialning skan surati bor, matni keyin kiritiladi.';
+    blok.append(bh, bp);
+    if (m.qirqim.length){
+      const bp2 = document.createElement('p');
+      bp2.textContent = 'Yonidagi suratni bosib kattalashtiring va shu yerdan o\'qing.';
+      blok.appendChild(bp2);
+    }
+    maqolaEl.appendChild(blok);
+  }
+
+  // yon panel
+  yonEl.innerHTML = '';
+  const bet = SON.betlar.find(b => b.bet === m.bet);
+
+  if (m.hudud.length && bet && SKAN_BOR){
+    const h0 = m.hudud[0];
+    const kesim = document.createElement('div');
+    kesim.className = 'kesim';
+    kesim.style.backgroundImage = `url("${skanYoli(bet.skan)}")`;
+    kesim.style.backgroundSize = `${10000 / h0.w}% ${10000 / h0.h}%`;
+    kesim.style.backgroundPosition =
+      `${h0.w >= 100 ? 0 : (h0.x / (100 - h0.w)) * 100}% ${h0.h >= 100 ? 0 : (h0.y / (100 - h0.h)) * 100}%`;
+    const kizoh = document.createElement('p');
+    kizoh.className = 'kesim-izoh';
+    kizoh.textContent = `${SON.nom}, ${m.bet}-bet. Matnni asl nusxa bilan solishtirish uchun.`;
+    const katta = document.createElement('button');
+    katta.type = 'button'; katta.className = 'kattalash';
+    katta.textContent = 'Betning to\'liq skanini ochish';
+    katta.addEventListener('click', () => window.open(skanYoli(bet.skan), '_blank'));
+    yonEl.append(kesim, kizoh, katta);
+  } else if (m.qirqim.length){
+    m.qirqim.forEach((yol, i) => {
+      const im = document.createElement('img');
+      im.className = 'qirqim-rasm';
+      im.loading = 'lazy';
+      im.src = skanYoli(yol);
+      im.alt = m.sarlavha + ' — qirqim surati ' + (i + 1);
+      im.title = 'Kattalashtirish uchun bosing';
+      im.addEventListener('click', () => window.open(skanYoli(yol), '_blank'));
+      yonEl.appendChild(im);
+    });
+    const kizoh = document.createElement('p');
+    kizoh.className = 'kesim-izoh';
+    kizoh.textContent = m.qirqim.length > 1
+      ? 'Material bir necha suratga bo\'lingan. Bosib kattalashtiring.'
+      : 'Qirqim surati. Bosib kattalashtiring.';
+    yonEl.appendChild(kizoh);
+  }
+
+  const dl = document.createElement('dl');
+  const qator = (k, v) => {
+    const dt = document.createElement('dt'); dt.textContent = k;
+    const dd = document.createElement('dd'); dd.textContent = v;
+    dl.append(dt, dd);
+  };
+  qator('Son', `${yoz(SON.nom)} (${yoz(SON.izoh)})`);
+  qator('Sana', yoz(SON.sana));
+  qator('Bet', m.bet ? String(m.bet) : 'aniqlanmagan');
+  qator('Rubrika', yoz(m.rubrika));
+  if (m.muallif) qator('Muallif', yoz(m.muallif));
+  yonEl.appendChild(dl);
+
+  if (matnBor(m)){
+    const ogoh = document.createElement('p');
+    ogoh.className = 'ogoh';
+    ogoh.textContent = 'Matn skandan birinchi marta ko\'chirildi va hali tekshirilmagan. […] belgisi o\'qib bo\'lmagan joyni bildiradi.';
+    yonEl.appendChild(ogoh);
+  }
+}
+
+/* ---------- alifbo ---------- */
+function alifboniOzgartir(qiymat){
+  ALIFBO = qiymat;
+  document.querySelectorAll('.alifbo button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.alifbo === qiymat));
+  });
+  document.getElementById('m-son').textContent = yoz(SON.nom);
+  document.getElementById('m-sana').textContent = yoz(SON.sana);
+  document.querySelector('.tagline').textContent = yoz('Мустақил газета');
+  document.querySelector('.masthead').textContent = yoz('ХУРРИЯТ');
+  filtrniQur(); royxatniQur();
+  if (JORIY) maqolaniQur(); else oynaBosh();
+  document.getElementById('footer-matn').textContent =
+    `${yoz(SON.nom)} (${yoz(SON.izoh)}), ${yoz(SON.sana)}. ` +
+    `${HAMMASI.length} ta material, ${HAMMASI.filter(matnBor).length} tasining matni kiritilgan. ` +
+    'Yangi son qo\'shish tartibi QOLLANMA.md faylida.';
+}
+
+/* ---------- ishga tushirish ---------- */
+document.querySelectorAll('.alifbo button').forEach(b => {
+  b.addEventListener('click', () => alifboniOzgartir(b.dataset.alifbo));
+});
+document.getElementById('orqaga').addEventListener('click', yop);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && JORIY) yop(); });
+document.getElementById('q').addEventListener('input', e => { SOROV = e.target.value; royxatniQur(); });
+window.addEventListener('popstate', () => {
+  const id = location.hash.slice(1);
+  if (id && HAMMASI.some(m => m.id === id)) och(id); else yop();
+});
+
+document.getElementById('m-soni').textContent = String(HAMMASI.length);
+document.getElementById('m-matn').textContent = String(HAMMASI.filter(matnBor).length);
+alifboniOzgartir('kir');
+
+yolniAniqla().then(() => {
+  xaritaniQur();
+  if (location.hash){
+    const id = location.hash.slice(1);
+    if (HAMMASI.some(m => m.id === id)) och(id);
+  }
+});
+</script>
+</body>
+</html>
